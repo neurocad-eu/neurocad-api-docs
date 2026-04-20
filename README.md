@@ -7,7 +7,7 @@ Public API specifications, integration guides, and SDK references for NeuroCAD.
 
 Docs portal:
 
-- [neurocad-eu.github.io/neurocad-api-docs](https://neurocad-eu.github.io/neurocad-api-docs/)
+- [docs.neurocad.eu](https://docs.neurocad.eu/)
 
 ## Purpose
 
