@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>NeuroCAD Public API</title>
+    <meta
+      name="description"
+      content="Public API contracts, schemas, examples, and integration guidance for NeuroCAD."
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <div class="hero__inner">
+        <p class="eyebrow">NeuroCAD Public API</p>
+        <h1>Enterprise integration surface for geometry, jobs, and artifacts.</h1>
+        <p class="lead">
+          Versioned contract material, example clients, and sandbox-first guidance
+          for external technical evaluation and integration planning.
+        </p>
+        <div class="hero__actions">
+          <a class="button button--primary" href="https://github.com/neurocad-eu/neurocad-api-docs/blob/main/openapi/openapi.yaml">OpenAPI Contract</a>
+          <a class="button" href="https://github.com/neurocad-eu/neurocad-examples">Examples</a>
+          <a class="button" href="https://github.com/neurocad-eu/neurocad-benchmarks">Benchmarks</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="page">
+      <section class="section">
+        <div class="section__heading">
+          <p class="section__eyebrow">Getting Started</p>
+          <h2>Minimum public integration loop</h2>
+        </div>
+        <ol class="steps">
+          <li>Exchange client credentials for a bearer token.</li>
+          <li>Create or resolve a project container.</li>
+          <li>Submit an inference or export job.</li>
+          <li>Poll job state or receive a webhook.</li>
+          <li>Resolve artifact metadata and download references.</li>
+        </ol>
+      </section>
+
+      <section class="section">
+        <div class="section__heading">
+          <p class="section__eyebrow">Artifacts</p>
+          <h2>Primary public resources</h2>
+        </div>
+        <div class="grid">
+          <article class="card">
+            <h3>Contracts</h3>
+            <ul>
+              <li><a href="https://github.com/neurocad-eu/neurocad-api-docs/blob/main/openapi/openapi.yaml">OpenAPI 3.1 contract</a></li>
+              <li><a href="https://github.com/neurocad-eu/neurocad-api-docs/blob/main/schemas/project.schema.json">Project schema</a></li>
+              <li><a href="https://github.com/neurocad-eu/neurocad-api-docs/blob/main/schemas/inference-job.schema.json">Inference job schema</a></li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Guides</h3>
+            <ul>
+              <li><a href="https://github.com/neurocad-eu/neurocad-api-docs/blob/main/guides/getting-started.md">Getting started</a></li>
+              <li><a href="https://github.com/neurocad-eu/neurocad-api-docs/blob/main/guides/authentication.md">Authentication</a></li>
+              <li><a href="https://github.com/neurocad-eu/neurocad-api-docs/blob/main/guides/environment-separation.md">Environment separation</a></li>
+              <li><a href="https://github.com/neurocad-eu/neurocad-api-docs/blob/main/guides/rate-limits.md">Rate limits</a></li>
+              <li><a href="https://github.com/neurocad-eu/neurocad-api-docs/blob/main/guides/webhooks.md">Webhooks</a></li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Examples</h3>
+            <ul>
+              <li><a href="https://github.com/neurocad-eu/neurocad-api-docs/blob/main/examples/python/basic_client.py">Python client</a></li>
+              <li><a href="https://github.com/neurocad-eu/neurocad-api-docs/blob/main/examples/javascript/basic_client.mjs">JavaScript client</a></li>
+              <li><a href="https://github.com/neurocad-eu/neurocad-api-docs/blob/main/examples/curl/create_inference_job.sh">curl example</a></li>
+              <li><a href="https://github.com/neurocad-eu/neurocad-api-docs/blob/main/postman/neurocad-api.postman_collection.json">Postman collection</a></li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section__heading">
+          <p class="section__eyebrow">Surface</p>
+          <h2>Current API domains</h2>
+        </div>
+        <div class="grid">
+          <article class="card">
+            <h3>Auth</h3>
+            <p>Client credential exchange for short-lived bearer tokens.</p>
+          </article>
+          <article class="card">
+            <h3>Projects</h3>
+            <p>Project container creation and listing for integration workflows.</p>
+          </article>
+          <article class="card">
+            <h3>Inference Jobs</h3>
+            <p>Submit geometry-adjacent tasks and track execution state.</p>
+          </article>
+          <article class="card">
+            <h3>Artifacts</h3>
+            <p>Resolve output metadata and approved download references.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section section--split">
+        <article class="panel">
+          <p class="section__eyebrow">Environments</p>
+          <h2>Sandbox-first operating model</h2>
+          <ul class="list">
+            <li>Production: <code>https://api.neurocad.eu</code></li>
+            <li>Sandbox: <code>https://sandbox.api.neurocad.eu</code></li>
+            <li>Separate credentials and callback endpoints per environment</li>
+            <li>Webhook consumers should treat payloads as untrusted input</li>
+            <li>Clients should implement backoff behavior for <code>429</code> responses</li>
+          </ul>
+        </article>
+        <article class="panel panel--code">
+          <p class="section__eyebrow">Example</p>
+          <h2>Submit a job</h2>
+          <pre><code>curl -X POST https://sandbox.api.neurocad.eu/v1/inference/jobs \
+  -H "Authorization: Bearer &lt;token&gt;" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "project_id": "prj_demo_001",
+    "task": "mesh-generation",
+    "input": {
+      "material": "steel-a36",
+      "resolution": "medium"
+    }
+  }'</code></pre>
+        </article>
+      </section>
+
+      <section class="section">
+        <div class="section__heading">
+          <p class="section__eyebrow">Related repositories</p>
+          <h2>Broader public diligence surface</h2>
+        </div>
+        <div class="grid">
+          <article class="card">
+            <h3><a href="https://github.com/neurocad-eu/neurocad-examples">neurocad-examples</a></h3>
+            <p>Reference clients, webhook receivers, and sandbox smoke-test material.</p>
+          </article>
+          <article class="card">
+            <h3><a href="https://github.com/neurocad-eu/neurocad-benchmarks">neurocad-benchmarks</a></h3>
+            <p>Versioned benchmark packaging, release notes, checksums, and sample-set metadata.</p>
+          </article>
+          <article class="card">
+            <h3><a href="https://github.com/neurocad-eu/neurocad-architecture">neurocad-architecture</a></h3>
+            <p>Public system architecture, trust boundaries, ADRs, and public/private split.</p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer__inner">
+        <span>NeuroCAD</span>
+        <a href="https://neurocad.eu">neurocad.eu</a>
+        <a href="mailto:office@neurocad.eu">office@neurocad.eu</a>
+      </div>
+    </footer>
+  </body>
+</html>

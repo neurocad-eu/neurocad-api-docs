@@ -50,3 +50,5 @@ jobs:
           test -f guides/getting-started.md
           test -f guides/environment-separation.md
           test -f guides/rate-limits.md
+          test -f docs/index.html
+          test -f docs/styles.css

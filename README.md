@@ -5,6 +5,10 @@
 
 Public API specifications, integration guides, and SDK references for NeuroCAD.
 
+Docs portal:
+
+- [neurocad-eu.github.io/neurocad-api-docs](https://neurocad-eu.github.io/neurocad-api-docs/)
+
 ## Purpose
 
 This repository is the public documentation surface for the NeuroCAD integration layer.
@@ -53,6 +57,7 @@ As the public surface expands, this repository will be organized around:
 - `guides/rate-limits.md`
 - `guides/errors.md`
 - `guides/webhooks.md`
+- `docs/index.html`
 
 ## Operational signals
 
