@@ -1,0 +1,305 @@
+openapi: 3.1.0
+info:
+  title: NeuroCAD Public API
+  version: 0.1.0
+  summary: Draft public contract for NeuroCAD enterprise integrations.
+  description: |
+    This draft specification defines the initial public integration surface for
+    NeuroCAD. It is intended for enterprise evaluation, platform integration,
+    and SDK planning.
+
+    The specification describes the external contract only. It does not expose
+    production kernel internals, private orchestration systems, or model
+    implementation details.
+servers:
+  - url: https://api.neurocad.eu
+    description: Production
+  - url: https://sandbox.api.neurocad.eu
+    description: Sandbox
+tags:
+  - name: Auth
+  - name: Projects
+  - name: Inference
+  - name: Artifacts
+security:
+  - bearerAuth: []
+paths:
+  /v1/auth/token:
+    post:
+      tags: [Auth]
+      summary: Exchange client credentials for an access token
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TokenRequest"
+      responses:
+        "200":
+          description: Token issued
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /v1/projects:
+    get:
+      tags: [Projects]
+      summary: List accessible projects
+      responses:
+        "200":
+          description: Project collection
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Project"
+    post:
+      tags: [Projects]
+      summary: Create a project container
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProjectRequest"
+      responses:
+        "201":
+          description: Project created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Project"
+  /v1/inference/jobs:
+    post:
+      tags: [Inference]
+      summary: Submit an inference or solver-ready generation job
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateInferenceJobRequest"
+      responses:
+        "202":
+          description: Job accepted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/InferenceJob"
+        "422":
+          description: Invalid job payload
+  /v1/inference/jobs/{jobId}:
+    get:
+      tags: [Inference]
+      summary: Retrieve job status
+      parameters:
+        - $ref: "#/components/parameters/JobId"
+      responses:
+        "200":
+          description: Job state
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/InferenceJob"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /v1/artifacts/{artifactId}:
+    get:
+      tags: [Artifacts]
+      summary: Resolve an output artifact
+      parameters:
+        - $ref: "#/components/parameters/ArtifactId"
+      responses:
+        "200":
+          description: Artifact metadata
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Artifact"
+        "404":
+          $ref: "#/components/responses/NotFound"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    JobId:
+      name: jobId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Stable NeuroCAD job identifier
+    ArtifactId:
+      name: artifactId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Stable NeuroCAD artifact identifier
+  responses:
+    Unauthorized:
+      description: Authentication failed
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    NotFound:
+      description: Requested resource does not exist
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+  schemas:
+    TokenRequest:
+      type: object
+      required: [client_id, client_secret]
+      properties:
+        client_id:
+          type: string
+        client_secret:
+          type: string
+          format: password
+        audience:
+          type: string
+          example: enterprise-api
+    TokenResponse:
+      type: object
+      required: [access_token, token_type, expires_in]
+      properties:
+        access_token:
+          type: string
+        token_type:
+          type: string
+          example: Bearer
+        expires_in:
+          type: integer
+          example: 3600
+    CreateProjectRequest:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          example: Bracket Assembly Study
+        external_reference:
+          type: string
+          example: PLM-4812
+        region:
+          type: string
+          example: eu-central
+    Project:
+      type: object
+      required: [id, name, status, created_at]
+      properties:
+        id:
+          type: string
+          example: prj_01JNX7AK6X4Q8P17R8P7PW7QVA
+        name:
+          type: string
+        status:
+          type: string
+          enum: [active, archived]
+        external_reference:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+    CreateInferenceJobRequest:
+      type: object
+      required: [project_id, task, input]
+      properties:
+        project_id:
+          type: string
+        task:
+          type: string
+          enum: [field-inference, mesh-generation, solver-export]
+        input:
+          type: object
+          additionalProperties: true
+        callback_url:
+          type: string
+          format: uri
+        labels:
+          type: array
+          items:
+            type: string
+    InferenceJob:
+      type: object
+      required: [id, project_id, task, status, created_at]
+      properties:
+        id:
+          type: string
+          example: job_01JNX7CCN2MZAW5P08JXG5GQ6P
+        project_id:
+          type: string
+        task:
+          type: string
+        status:
+          type: string
+          enum: [queued, running, completed, failed]
+        created_at:
+          type: string
+          format: date-time
+        completed_at:
+          type: string
+          format: date-time
+        artifact_ids:
+          type: array
+          items:
+            type: string
+    Artifact:
+      type: object
+      required: [id, kind, content_type]
+      properties:
+        id:
+          type: string
+          example: art_01JNX7FQZ2DN0M3WT8G06KQ2PZ
+        kind:
+          type: string
+          enum: [mesh, field, report, export-bundle]
+        content_type:
+          type: string
+          example: application/octet-stream
+        download_url:
+          type: string
+          format: uri
+        checksum_sha256:
+          type: string
+        metadata:
+          type: object
+          additionalProperties: true
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code:
+              type: string
+              example: not_found
+            message:
+              type: string
