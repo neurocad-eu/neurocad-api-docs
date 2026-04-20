@@ -44,11 +44,30 @@ As the public surface expands, this repository will be organized around:
 - `postman/` for importer-ready API collections
 - `scripts/` for lightweight validation utilities
 
+## Core public documents
+
+- `guides/getting-started.md`
+- `guides/authentication.md`
+- `guides/environment-separation.md`
+- `guides/versioning.md`
+- `guides/rate-limits.md`
+- `guides/errors.md`
+- `guides/webhooks.md`
+
+## Operational signals
+
+This repository now exposes:
+
+- versioned OpenAPI contract material
+- reusable JSON schemas
+- Postman-ready import artifacts
+- syntax-checked Python, JavaScript, and shell examples
+- validation workflow for public contract integrity
+- tagged releases for externally visible changes
+
 ## Status
 
-Initial public scaffold.
-
-The repository is being prepared as the canonical public reference point for NeuroCAD integrations.
+Public reference surface in active hardening.
 
 Current public artifacts include:
 

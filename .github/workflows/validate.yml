@@ -30,6 +30,12 @@ jobs:
       - name: Validate OpenAPI contract
         run: python scripts/validate_openapi.py
 
+      - name: Validate JSON artifacts
+        run: |
+          python -m json.tool postman/neurocad-api.postman_collection.json > /dev/null
+          python -m json.tool schemas/project.schema.json > /dev/null
+          python -m json.tool schemas/inference-job.schema.json > /dev/null
+
       - name: Smoke-check Python example syntax
         run: python -m py_compile examples/python/basic_client.py
 
@@ -38,3 +44,9 @@ jobs:
 
       - name: Smoke-check shell example syntax
         run: bash -n examples/curl/create_inference_job.sh
+
+      - name: Ensure enterprise docs exist
+        run: |
+          test -f guides/getting-started.md
+          test -f guides/environment-separation.md
+          test -f guides/rate-limits.md

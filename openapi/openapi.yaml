@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: NeuroCAD Public API
-  version: 0.1.0
+  version: 0.3.0
   summary: Draft public contract for NeuroCAD enterprise integrations.
   description: |
     This draft specification defines the initial public integration surface for
@@ -44,6 +44,8 @@ paths:
                 $ref: "#/components/schemas/TokenResponse"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "429":
+          $ref: "#/components/responses/RateLimited"
   /v1/projects:
     get:
       tags: [Projects]
@@ -79,6 +81,8 @@ paths:
                 properties:
                   data:
                     $ref: "#/components/schemas/Project"
+        "429":
+          $ref: "#/components/responses/RateLimited"
   /v1/inference/jobs:
     post:
       tags: [Inference]
@@ -101,6 +105,8 @@ paths:
                     $ref: "#/components/schemas/InferenceJob"
         "422":
           description: Invalid job payload
+        "429":
+          $ref: "#/components/responses/RateLimited"
   /v1/inference/jobs/{jobId}:
     get:
       tags: [Inference]
@@ -119,6 +125,8 @@ paths:
                     $ref: "#/components/schemas/InferenceJob"
         "404":
           $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/RateLimited"
   /v1/artifacts/{artifactId}:
     get:
       tags: [Artifacts]
@@ -137,6 +145,8 @@ paths:
                     $ref: "#/components/schemas/Artifact"
         "404":
           $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/RateLimited"
 components:
   securitySchemes:
     bearerAuth:
@@ -167,6 +177,12 @@ components:
             $ref: "#/components/schemas/Error"
     NotFound:
       description: Requested resource does not exist
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    RateLimited:
+      description: Client rate limit exceeded
       content:
         application/json:
           schema:
@@ -303,3 +319,6 @@ components:
               example: not_found
             message:
               type: string
+            retry_after_seconds:
+              type: integer
+              example: 30
