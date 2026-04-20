@@ -1,0 +1,53 @@
+# neurocad-api-docs
+
+Public API specifications, integration guides, and SDK references for NeuroCAD.
+
+## Purpose
+
+This repository is the public documentation surface for the NeuroCAD integration layer.
+
+It is intended for enterprise teams, technical partners, and internal platform integrators who need a clear contract for how external systems will interact with NeuroCAD.
+
+## Scope
+
+This repository is designed to host:
+
+- versioned OpenAPI and schema artifacts
+- authentication and authorization models
+- request and response examples
+- SDK usage patterns
+- integration notes for enterprise workflows
+- change logs for externally visible API behavior
+
+## What this repository does not contain
+
+This repository does not expose:
+
+- production kernel internals
+- model implementation details
+- internal orchestration pipelines
+- private deployment or operational systems
+
+The goal is to provide a serious public integration surface without disclosing proprietary implementation details.
+
+## Intended structure
+
+As the public surface expands, this repository will be organized around:
+
+- `openapi/` for versioned API contracts
+- `schemas/` for shared request and response schemas
+- `examples/` for language-specific usage examples
+- `guides/` for integration and authentication documentation
+- `changelog/` for externally relevant contract changes
+
+## Status
+
+Initial public scaffold.
+
+The repository is being prepared as the canonical public reference point for NeuroCAD integrations.
+
+## Links
+
+- Organization: [github.com/neurocad-eu](https://github.com/neurocad-eu)
+- Website: [neurocad.eu](https://neurocad.eu)
+- Contact: [office@neurocad.eu](mailto:office@neurocad.eu)
