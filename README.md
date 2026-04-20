@@ -1,5 +1,8 @@
 # neurocad-api-docs
 
+[![API Contract Validation](https://github.com/neurocad-eu/neurocad-api-docs/actions/workflows/validate.yml/badge.svg)](https://github.com/neurocad-eu/neurocad-api-docs/actions/workflows/validate.yml)
+[![Release](https://img.shields.io/github/v/release/neurocad-eu/neurocad-api-docs)](https://github.com/neurocad-eu/neurocad-api-docs/releases)
+
 Public API specifications, integration guides, and SDK references for NeuroCAD.
 
 ## Purpose
@@ -38,13 +41,22 @@ As the public surface expands, this repository will be organized around:
 - `schemas/` for shared request and response schemas
 - `examples/` for language-specific usage examples
 - `guides/` for integration and authentication documentation
-- `changelog/` for externally relevant contract changes
+- `postman/` for importer-ready API collections
+- `scripts/` for lightweight validation utilities
 
 ## Status
 
 Initial public scaffold.
 
 The repository is being prepared as the canonical public reference point for NeuroCAD integrations.
+
+Current public artifacts include:
+
+- draft OpenAPI contract
+- reusable JSON schemas
+- Python, JavaScript, and curl examples
+- Postman collection
+- contract validation workflow
 
 ## Links
 

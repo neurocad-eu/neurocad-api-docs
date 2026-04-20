@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "NeuroCAD Project",
+  "type": "object",
+  "required": ["id", "name", "status", "created_at"],
+  "properties": {
+    "id": {"type": "string"},
+    "name": {"type": "string"},
+    "status": {"type": "string", "enum": ["active", "archived"]},
+    "external_reference": {"type": "string"},
+    "created_at": {"type": "string", "format": "date-time"}
+  }
+}

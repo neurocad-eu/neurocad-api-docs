@@ -1,0 +1,40 @@
+name: Validate Public API Surface
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install validation dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml jsonschema
+
+      - name: Validate OpenAPI contract
+        run: python scripts/validate_openapi.py
+
+      - name: Smoke-check Python example syntax
+        run: python -m py_compile examples/python/basic_client.py
+
+      - name: Smoke-check JavaScript example syntax
+        run: node --check examples/javascript/basic_client.mjs
+
+      - name: Smoke-check shell example syntax
+        run: bash -n examples/curl/create_inference_job.sh

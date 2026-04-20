@@ -1,0 +1,59 @@
+{
+  "info": {
+    "name": "NeuroCAD Public API",
+    "_postman_id": "d8d6cb31-2b9d-42af-b718-2eb6a320fa7f",
+    "description": "Draft public collection for NeuroCAD enterprise integrations.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {"key": "baseUrl", "value": "https://sandbox.api.neurocad.eu"},
+    {"key": "token", "value": "replace-me"},
+    {"key": "projectId", "value": "prj_demo_001"},
+    {"key": "artifactId", "value": "art_demo_001"}
+  ],
+  "item": [
+    {
+      "name": "Issue token",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": "{{baseUrl}}/v1/auth/token",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"client_id\": \"partner_demo\",\n  \"client_secret\": \"replace-in-production\",\n  \"audience\": \"enterprise-api\"\n}"
+        }
+      }
+    },
+    {
+      "name": "List projects",
+      "request": {
+        "method": "GET",
+        "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+        "url": "{{baseUrl}}/v1/projects"
+      }
+    },
+    {
+      "name": "Create job",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Authorization", "value": "Bearer {{token}}"},
+          {"key": "Content-Type", "value": "application/json"}
+        ],
+        "url": "{{baseUrl}}/v1/inference/jobs",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"project_id\": \"{{projectId}}\",\n  \"task\": \"solver-export\",\n  \"input\": {\n    \"material\": \"aluminum-6061\",\n    \"export_format\": \"solver-bundle\"\n  },\n  \"labels\": [\"postman-example\"]\n}"
+        }
+      }
+    },
+    {
+      "name": "Get artifact",
+      "request": {
+        "method": "GET",
+        "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+        "url": "{{baseUrl}}/v1/artifacts/{{artifactId}}"
+      }
+    }
+  ]
+}

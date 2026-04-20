@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "NeuroCAD Inference Job",
+  "type": "object",
+  "required": ["id", "project_id", "task", "status", "created_at"],
+  "properties": {
+    "id": {"type": "string"},
+    "project_id": {"type": "string"},
+    "task": {
+      "type": "string",
+      "enum": ["field-inference", "mesh-generation", "solver-export"]
+    },
+    "status": {
+      "type": "string",
+      "enum": ["queued", "running", "completed", "failed"]
+    },
+    "created_at": {"type": "string", "format": "date-time"},
+    "completed_at": {"type": "string", "format": "date-time"},
+    "artifact_ids": {
+      "type": "array",
+      "items": {"type": "string"}
+    }
+  }
+}
